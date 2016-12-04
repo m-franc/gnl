@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:15:18 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/03 11:33:59 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/04 19:57:53 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 # define GET_NEXT_LINE_H
 
-# define BUFF_SIZE 1000
+# define BUFF_SIZE 10000
 
 #include <fcntl.h>
 #include "libft/libft.h"
