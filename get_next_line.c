@@ -6,34 +6,26 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/04 19:58:06 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/10 20:28:04 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 int		get_next_line(int fd, char **line)
 {
-	int 			i;
-	static char		buf[BUFF_SIZE + 1];
 	int				ret;
+	static char		buf[BUFF_SIZE + 1];
 	
-	i = 0;
-	while ((ret = read(fd, buf, BUFF_SIZE)))
-		buf[ret] = '\0';
-	while (buf[i])
+	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
-		(*line)[i] = buf[i];
-		if (buf[i] == '\0')
-			return (0);
-		if (buf[i] == '\n')
-		{
-			(*line)[i] = '\0';
-			ft_putendl((*line));
+		buf[ret] = '\0';
+		if (ret == -1)
+			return (-1);
+		(*line) = ft_strjoin((*line), buf);
+		ft_putendl((*line));
+		if (ft_strchr(buf, '\n') != NULL)
 			return (1);
-		}
-		i++;
 	}
-	return (2);
+	return (0);
 }
