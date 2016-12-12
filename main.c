@@ -9,6 +9,6 @@ int	main(int ac, char **av)
 	if (ac != 2)
 		return (0);
 	fd = open(av[1], O_RDWR);
-	while (get_next_line(fd, &line) == 1)
+	while (get_next_line(fd, &line))
 		printf("ligne : %s\n", line);
 }
