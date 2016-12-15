@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/14 21:59:13 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/15 20:01:39 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,13 @@ int				save_lines(char **tmp, char **line)
 
 int				ft_read(int fd, char **tmp, char **line)
 {
-	char		*tmpcpy;
 	char		buf[BUFF_SIZE + 1];
 	int			ret;
 
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[ret] = '\0';
-		tmpcpy = ft_strjoin(*tmp, buf);
-		ft_strdel(tmp);
-		*tmp = tmpcpy;
+		*tmp = ft_strjoin(*tmp, buf);
 		if (save_lines(tmp, line) == 1)
 			return (1);
 	}
@@ -48,7 +45,7 @@ int				ft_read(int fd, char **tmp, char **line)
 		return (save_lines(tmp, line));
 	if (*line == NULL)
 		return (0);
-	return (1);
+	return (0);
 }
 
 int				get_next_line(int fd, char **line)
