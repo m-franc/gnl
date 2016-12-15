@@ -6,17 +6,18 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/15 20:01:39 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/15 23:03:09 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-int				save_lines(char **tmp, char **line)
+int				save_lines(char **tmp, char **line, char **tmpline)
 {
 	size_t		lenline;
 
+	*tmpline = ft_strdup(*tmp);
 	if (ft_strchr(*tmp, '\n') != NULL)
 	{
 		lenline = ft_strlen(*tmp) - ft_strlen(ft_strchr(*tmp, '\n'));
@@ -31,21 +32,23 @@ int				ft_read(int fd, char **tmp, char **line)
 {
 	char		buf[BUFF_SIZE + 1];
 	int			ret;
+	char		*tmpline;
 
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
+		if (ret < 0)
+			return (-1);
 		buf[ret] = '\0';
 		*tmp = ft_strjoin(*tmp, buf);
-		if (save_lines(tmp, line) == 1)
+		if (save_lines(tmp, line, &tmpline) == 1)
 			return (1);
 	}
-	if (ret < 0)
-		return (-1);
-	else if (ret == 0)
-		return (save_lines(tmp, line));
+	*line = ft_strdup(tmpline);
 	if (*line == NULL)
 		return (0);
-	return (0);
+	if (ret == 0)
+		return (save_lines(tmp, line, &tmpline));
+	return (1);
 }
 
 int				get_next_line(int fd, char **line)
@@ -55,7 +58,7 @@ int				get_next_line(int fd, char **line)
 	if (!fd || !line)
 		return (-1);
 	*line = NULL;
-	if (!(tmp))
+	if (tmp == NULL)
 		tmp = ft_strnew(1);
 	return (ft_read(fd, &tmp, line));
 }
