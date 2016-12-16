@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/16 11:49:15 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/16 11:52:49 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ int				ft_read(int fd, char **tmp, char **line)
 	int			ret;
 //	char		*tmpline;
 
-	if (save_lines(tmp, line) == 1)
-		return (1);
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[ret] = '\0';
