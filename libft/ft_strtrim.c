@@ -1,24 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/27 14:15:18 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/17 20:07:24 by mfranc           ###   ########.fr       */
+/*   Created: 2016/11/09 10:08:40 by mfranc            #+#    #+#             */
+/*   Updated: 2016/11/21 15:59:21 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "libft.h"
 
-# define GET_NEXT_LINE_H
+char	*ft_strtrim(char const *s)
+{
+	char	*new;
+	size_t	i;
+	size_t	o;
 
-# define BUFF_SIZE 1
-
-#include <fcntl.h>
-#include "libft/libft.h"
-
-int	get_next_line(const int fd, char **line);
-
-#endif
+	if (!s)
+		return (NULL);
+	o = 0;
+	while (s[o] && (s[o] == ' ' || s[o] == '\t' || s[o] == '\n'))
+		o++;
+	i = o;
+	while (s[i] && s[o])
+		i++;
+	i--;
+	while (s[i] && s[o] && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n'))
+		i--;
+	i++;
+	new = ft_strsub((char*)s, o, i - o);
+	if (new == NULL)
+		return (NULL);
+	return (new);
+}

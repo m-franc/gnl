@@ -1,24 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_range.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/27 14:15:18 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/17 20:07:24 by mfranc           ###   ########.fr       */
+/*   Created: 2016/11/03 12:55:11 by mfranc            #+#    #+#             */
+/*   Updated: 2016/11/21 20:22:33 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include <stdlib.h>
 
-# define GET_NEXT_LINE_H
+int	*ft_range(int start, int end)
+{
+	int	*tab;
+	int	size;
+	int	i;
 
-# define BUFF_SIZE 1
-
-#include <fcntl.h>
-#include "libft/libft.h"
-
-int	get_next_line(const int fd, char **line);
-
-#endif
+	if (start > end)
+		size = start - end;
+	else
+		size = end - start;
+	if (!(tab = (int*)malloc(sizeof(int) * (size))))
+		return (0);
+	i = 0;
+	while (i <= size)
+	{
+		if (start > end)
+			tab[i++] = start--;
+		else
+			tab[i++] = start++;
+	}
+	return (tab);
+}

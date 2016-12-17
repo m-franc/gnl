@@ -11,5 +11,8 @@ int	main(int ac, char **av)
 	fd = open(av[1], O_RDWR);
 
 	while (get_next_line(fd, &line))
+	{
 		printf("\033[31mligne : %s\n\033[0m", line);
+		free(line);
+	}
 }

@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strsub.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/27 14:15:18 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/17 20:07:24 by mfranc           ###   ########.fr       */
+/*   Created: 2016/11/08 20:21:39 by mfranc            #+#    #+#             */
+/*   Updated: 2016/12/15 15:24:53 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "libft.h"
+#include <stdio.h>
 
-# define GET_NEXT_LINE_H
+char	*ft_strsub(char const *s, unsigned int start, size_t n)
+{
+	char				*new;
+	static unsigned int	i;
 
-# define BUFF_SIZE 1
-
-#include <fcntl.h>
-#include "libft/libft.h"
-
-int	get_next_line(const int fd, char **line);
-
-#endif
+	if (!s)
+		return (NULL);
+	i = 0;
+	new = ft_strnew(n);
+	if (new == NULL)
+		return (NULL);
+	while (i < n)
+		new[i++] = s[start++];
+	new[i] = '\0';
+	return (new);
+}

@@ -6,28 +6,23 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/16 23:19:41 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/17 20:25:39 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-int				save_lines(char **tmp, char **line)
+int				save_lines(char *ndtmp, char **tmp, char **line)
 {
-	size_t		lenline;
-	char		*stop;
-
-	stop = ft_strchr(*tmp, '\n');
-	if (ft_strlen(stop) > 0)
+//	printf("TMP : %s\n", ndtmp);
+//	printf("LINE : %s\n", *line);d
+	if (*ndtmp != '\0')
 	{
-		lenline = ft_strlen(*line) - ft_strlen(stop);
-		*line = ft_strsub(*line, 0, lenline);
-		*tmp = ft_strdup(stop + 1);
-		return (1);
+		*line = ft_strsub(*line, 0, ft_strlen(*line) - ft_strlen(ndtmp));
+		*tmp = ndtmp;
+   		return (1);
 	}
-	else
-		return (1);
 	return (0);
 }
 
@@ -35,17 +30,21 @@ int				ft_read(int fd, char **tmp, char **line)
 {
 	char		buf[BUFF_SIZE + 1];
 	int			ret;
+	char		*ndtmp;
 
-	printf("TMP APRES UN GNL : %s\n", *tmp);
-	while (ft_strchr(*line, '\n') != NULL)
-	{
+	*line = ft_strjoin("", buf);
+	ndtmp = ft_strchr(*line, '\n');
+	// BOUCLE INFINIS A CAUSE DE LA CONDITION, DANS LE CAS OU IL Y A UN /0.....
+	while (ndtmp == NULL)
+	{ 
 		ret = read(fd, buf, BUFF_SIZE);
-		if (ret < 0)
-			return (-1);
 		buf[ret] = '\0';
-		*line = ft_strjoin(*tmp, buf);
+		*line = ft_strjoin(*line, buf);
+		ndtmp = ft_strchr(*line, '\n');
 	}
-	return (save_lines(tmp, line));
+	if (ret < 0)
+		return (-1);
+	return (save_lines(ndtmp, tmp, line));
 }
 
 int				get_next_line(int fd, char **line)
