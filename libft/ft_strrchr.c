@@ -1,24 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/27 14:15:18 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/17 20:07:24 by mfranc           ###   ########.fr       */
+/*   Created: 2016/11/06 11:38:18 by mfranc            #+#    #+#             */
+/*   Updated: 2016/11/21 16:53:27 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "libft.h"
 
-# define GET_NEXT_LINE_H
+char	*ft_strrchr(const char *str, int c)
+{
+	int		len;
+	int		find;
 
-# define BUFF_SIZE 1
-
-#include <fcntl.h>
-#include "libft/libft.h"
-
-int	get_next_line(const int fd, char **line);
-
-#endif
+	len = 0;
+	find = -1;
+	while (str[len])
+	{
+		if (str[len] == (unsigned char)c)
+			find = len;
+		len++;
+	}
+	if (find != -1)
+		return ((char*)str + find);
+	if (str[len] == c)
+		return ((char*)&str[len]);
+	else
+		return (NULL);
+}

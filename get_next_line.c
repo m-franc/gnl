@@ -6,27 +6,23 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/16 12:59:20 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/17 20:10:54 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-int				save_lines(char **tmp, char **line/*, char **tmpline*/)
+int				save_lines(char *ndtmp, char **tmp, char **line)
 {
-	size_t		lenline;
-
-	if (ft_strchr(*tmp, '\n') != NULL)
+//	printf("TMP : %s\n", ndtmp);
+//	printf("LINE : %s\n", *line);d
+	if (*ndtmp != '\0')
 	{
-		lenline = ft_strlen(*tmp) - ft_strlen(ft_strchr(*tmp, '\n'));
-		*line = ft_strsub(*tmp, 0, lenline);
-		*tmp = ft_strchr(*tmp, '\n') + 1;
-		return (1);
+		*line = ft_strsub(*line, 0, ft_strlen(*line) - ft_strlen(ndtmp));
+		*tmp = ndtmp;
+   		return (1);
 	}
-	*line = ft_strdup(*tmp);
-	if (**line == '\0')
-		*line = NULL;
 	return (0);
 }
 
@@ -34,19 +30,21 @@ int				ft_read(int fd, char **tmp, char **line)
 {
 	char		buf[BUFF_SIZE + 1];
 	int			ret;
+	char		*ndtmp;
 
-	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
-	{
+	*line = ft_strjoin("", buf);
+	ndtmp = ft_strchr(*line, '\n');
+	// BOUCLE INFINIS A CAUSE DE LA CONDITION, DANS LE CAS OU IL Y A UN /0.....
+	while (ndtmp == NULL)
+	{ 
+		ret = read(fd, buf, BUFF_SIZE);
 		buf[ret] = '\0';
-		*tmp = ft_strjoin(*tmp, buf);
-		if (save_lines(tmp, line) == 1)
-			return (1);
+		*line = ft_strjoin(*line, buf);
+		ndtmp = ft_strchr(*line, '\n');
 	}
 	if (ret < 0)
 		return (-1);
-	if (*line != NULL)
-		return (1);
-	return (save_lines(tmp, line));
+	return (save_lines(ndtmp, tmp, line));
 }
 
 int				get_next_line(int fd, char **line)
@@ -56,7 +54,5 @@ int				get_next_line(int fd, char **line)
 	if (!fd || !line)
 		return (-1);
 	*line = NULL;
-	if (tmp == NULL)
-		tmp = ft_strnew(1);
 	return (ft_read(fd, &tmp, line));
 }

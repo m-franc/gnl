@@ -1,24 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/27 14:15:18 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/17 20:07:24 by mfranc           ###   ########.fr       */
+/*   Created: 2016/11/05 14:09:22 by mfranc            #+#    #+#             */
+/*   Updated: 2016/11/20 17:21:07 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "libft.h"
 
-# define GET_NEXT_LINE_H
+void	*ft_memmove(void *dest, const void *src, size_t n)
+{
+	unsigned char		*srcstr;
+	unsigned char		*deststr;
 
-# define BUFF_SIZE 1
-
-#include <fcntl.h>
-#include "libft/libft.h"
-
-int	get_next_line(const int fd, char **line);
-
-#endif
+	srcstr = (unsigned char*)src;
+	deststr = (unsigned char*)dest;
+	if (srcstr < deststr)
+	{
+		srcstr = srcstr + n - 1;
+		deststr = deststr + n - 1;
+		while (n-- > 0)
+			*deststr-- = *srcstr--;
+	}
+	else
+	{
+		while (n-- > 0)
+			*deststr++ = *srcstr++;
+	}
+	return (dest);
+}
