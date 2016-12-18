@@ -21,20 +21,22 @@ int				save_lines(char *ndtmp, char **tmp, char **line)
 	{
 		*line = ft_strsub(*line, 0, ft_strlen(*line) - ft_strlen(ndtmp));
 		*tmp = ndtmp;
-   		return (1);
+		return (1);
 	}
-	return (0);
+	// Pas mal a revoir avec la condition du while
+	ft_strdel(tmp);
+	returnn (0);
 }
 
 int				ft_read(int fd, char **tmp, char **line)
 {
 	char		buf[BUFF_SIZE + 1];
-	int			ret;
+	int		ret;
 	char		*ndtmp;
-
-	*line = ft_strjoin("", buf);
-	ndtmp = ft_strchr(*line, '\n');
-	// BOUCLE INFINIS A CAUSE DE LA CONDITION, DANS LE CAS OU IL Y A UN /0.....
+	
+	*line = ft_strjoin(*tmp, buf);
+	if (save_lines(ndtmp, line, tmp) == 1)
+	// CONDITION A RETRAVAILLER / BOUCLE INFINIS, une seule ligne gros buffer, tout sauf la derniere ligne (\0) avec petit buffer, surement a cause de la boucle infinis... Puis revoir pourquoi on a qune ligne en gros buffer, surement revoir saves lines. A demain
 	while (ndtmp == NULL)
 	{ 
 		ret = read(fd, buf, BUFF_SIZE);
