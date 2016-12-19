@@ -16,16 +16,18 @@
 int				save_lines(char *ndtmp, char **tmp, char **line)
 {
 //	printf("TMP : %s\n", ndtmp);
-//	printf("LINE : %s\n", *line);d
+//	printf("LINE : %s\n", *line);
 	if (*ndtmp != '\0')
 	{
 		*line = ft_strsub(*line, 0, ft_strlen(*line) - ft_strlen(ndtmp));
-		*tmp = ndtmp;
+		*tmp = ndtmp + 1;
 		return (1);
 	}
+	if (*ndtmp == '\0')
+		*line = NULL;
 	// Pas mal a revoir avec la condition du while
 	ft_strdel(tmp);
-	returnn (0);
+	return (0);
 }
 
 int				ft_read(int fd, char **tmp, char **line)
@@ -34,9 +36,10 @@ int				ft_read(int fd, char **tmp, char **line)
 	int		ret;
 	char		*ndtmp;
 	
+	if (!*tmp)
+		*tmp = "";
 	*line = ft_strjoin(*tmp, buf);
-	if (save_lines(ndtmp, line, tmp) == 1)
-	// CONDITION A RETRAVAILLER / BOUCLE INFINIS, une seule ligne gros buffer, tout sauf la derniere ligne (\0) avec petit buffer, surement a cause de la boucle infinis... Puis revoir pourquoi on a qune ligne en gros buffer, surement revoir saves lines. A demain
+	ndtmp = ft_strchr(*line, '\n');
 	while (ndtmp == NULL)
 	{ 
 		ret = read(fd, buf, BUFF_SIZE);
