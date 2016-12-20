@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/17 20:25:39 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/20 13:53:57 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ int				save_lines(char *ndtmp, char **tmp, char **line)
 		*tmp = ndtmp + 1;
 		return (1);
 	}
-	if (*ndtmp == '\0')
-		*line = NULL;
 	// Pas mal a revoir avec la condition du while
 	ft_strdel(tmp);
 	return (0);
@@ -46,6 +44,8 @@ int				ft_read(int fd, char **tmp, char **line)
 		buf[ret] = '\0';
 		*line = ft_strjoin(*line, buf);
 		ndtmp = ft_strchr(*line, '\n');
+		if (*line == '\0')
+			return (1);
 	}
 	if (ret < 0)
 		return (-1);
