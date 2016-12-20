@@ -36,16 +36,15 @@ int				ft_read(int fd, char **tmp, char **line)
 	
 	if (!*tmp)
 		*tmp = "";
-	*line = ft_strjoin(*tmp, buf);
-	ndtmp = ft_strchr(*line, '\n');
-	while (ndtmp == NULL)
-	{ 
+	*line = *tmp;
+//	printf("LINE : %s\n", *line);
+	ndtmp = ft_strchr(*tmp, '\n');
+	while (ndtmp == NULL && *line != '\0')
+	{
 		ret = read(fd, buf, BUFF_SIZE);
 		buf[ret] = '\0';
 		*line = ft_strjoin(*line, buf);
 		ndtmp = ft_strchr(*line, '\n');
-		if (*line == '\0')
-			return (1);
 	}
 	if (ret < 0)
 		return (-1);
@@ -59,5 +58,6 @@ int				get_next_line(int fd, char **line)
 	if (!fd || !line)
 		return (-1);
 	*line = NULL;
+//	printf("TMP : %s\n", tmp);
 	return (ft_read(fd, &tmp, line));
 }
