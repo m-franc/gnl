@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/20 13:53:57 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/21 18:48:58 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,49 +15,52 @@
 
 int				save_lines(char *ndtmp, char **tmp, char **line)
 {
-//	printf("TMP : %s\n", ndtmp);
-//	printf("LINE : %s\n", *line);
+	if (ndtmp == NULL)
+	{	
+		*line = ft_strdup(*line);
+		**tmp = '\0';
+		return (1);
+	}
 	if (*ndtmp != '\0')
 	{
 		*line = ft_strsub(*line, 0, ft_strlen(*line) - ft_strlen(ndtmp));
 		*tmp = ndtmp + 1;
 		return (1);
 	}
-	// Pas mal a revoir avec la condition du while
-	ft_strdel(tmp);
 	return (0);
 }
 
 int				ft_read(int fd, char **tmp, char **line)
 {
 	char		buf[BUFF_SIZE + 1];
-	int		ret;
+	int			ret;
 	char		*ndtmp;
-	
+
 	if (!*tmp)
 		*tmp = "";
 	*line = *tmp;
-//	printf("LINE : %s\n", *line);
-	ndtmp = ft_strchr(*tmp, '\n');
-	while (ndtmp == NULL && *line != '\0')
+	ndtmp = ft_strchr(*line, '\n');
+	while (ndtmp == NULL || *tmp != '\0')
 	{
-		ret = read(fd, buf, BUFF_SIZE);
+		if ((ret = read(fd, buf, BUFF_SIZE)) == 0)
+			break ;
 		buf[ret] = '\0';
 		*line = ft_strjoin(*line, buf);
 		ndtmp = ft_strchr(*line, '\n');
 	}
 	if (ret < 0)
 		return (-1);
+	if (ndtmp == NULL && **tmp == '\0')
+		return (0);
 	return (save_lines(ndtmp, tmp, line));
 }
 
-int				get_next_line(int fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
 	static char	*tmp;
 
 	if (!fd || !line)
 		return (-1);
 	*line = NULL;
-//	printf("TMP : %s\n", tmp);
 	return (ft_read(fd, &tmp, line));
 }
