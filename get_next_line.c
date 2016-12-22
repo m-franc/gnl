@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/21 18:48:58 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/22 13:49:36 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,12 @@ int				save_lines(char *ndtmp, char **tmp, char **line)
 		**tmp = '\0';
 		return (1);
 	}
-	if (*ndtmp != '\0')
+	else
 	{
 		*line = ft_strsub(*line, 0, ft_strlen(*line) - ft_strlen(ndtmp));
 		*tmp = ndtmp + 1;
 		return (1);
 	}
-	return (0);
 }
 
 int				ft_read(int fd, char **tmp, char **line)
@@ -40,7 +39,7 @@ int				ft_read(int fd, char **tmp, char **line)
 		*tmp = "";
 	*line = *tmp;
 	ndtmp = ft_strchr(*line, '\n');
-	while (ndtmp == NULL || *tmp != '\0')
+	while (!ndtmp || *tmp)
 	{
 		if ((ret = read(fd, buf, BUFF_SIZE)) == 0)
 			break ;
