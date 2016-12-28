@@ -6,42 +6,82 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/22 13:49:36 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/28 21:10:47 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-int				save_lines(char *ndtmp, char **tmp, char **line)
+t_file	*lstnew(int fd)
+{
+	t_file	*new;
+
+	if (!(new = (t_file*)malloc(sizeof(t_file))))
+		return (NULL);
+	new->fd = fd;
+	new->tmp = NULL;
+	new->next = NULL;
+	return (new);
+}
+
+t_file	*get_file(t_file **begin, int fd)
+{
+	t_file	*tmplst;
+	t_file	*tmpnext;
+
+	if (!*begin)
+		return (*begin = lstnew(fd));
+	tmplst = (*begin);
+	tmpnext = (*begin)->next;
+	if (tmplst->fd == fd)
+		return (tmplst);
+	while (tmpnext)
+	{
+		if (tmpnext->fd == fd)
+		{
+			tmplst->next = tmpnext->next;
+			tmpnext->next = (*begin)->next;
+			*begin = tmpnext;
+			return (tmpnext);
+		}
+		tmplst = tmplst->next;
+		tmpnext = tmpnext->next;
+	}
+	tmpnext = lstnew(fd);
+	return (tmpnext);
+}
+
+int				save_lines(char *ndtmp, t_file **file, char **line)
 {
 	if (ndtmp == NULL)
 	{	
 		*line = ft_strdup(*line);
-		**tmp = '\0';
+		(*file)->tmp[0] = '\0';
 		return (1);
 	}
 	else
 	{
 		*line = ft_strsub(*line, 0, ft_strlen(*line) - ft_strlen(ndtmp));
-		*tmp = ndtmp + 1;
+		(*file)->tmp = ndtmp + 1;
 		return (1);
 	}
 }
 
-int				ft_read(int fd, char **tmp, char **line)
+int				ft_read(t_file **file, char **line)
 {
 	char		buf[BUFF_SIZE + 1];
 	int			ret;
 	char		*ndtmp;
 
-	if (!*tmp)
-		*tmp = "";
-	*line = *tmp;
+	if (!((*file)->tmp))
+		(*file)->tmp = ft_strnew(0);
+	*line = (*file)->tmp;
 	ndtmp = ft_strchr(*line, '\n');
-	while (!ndtmp || *tmp)
+
+	while (!ndtmp || (*file)->tmp)
 	{
-		if ((ret = read(fd, buf, BUFF_SIZE)) == 0)
+		if ((ret = read((*file)->fd, buf, BUFF_SIZE)) == 0)
 			break ;
 		buf[ret] = '\0';
 		*line = ft_strjoin(*line, buf);
@@ -49,17 +89,18 @@ int				ft_read(int fd, char **tmp, char **line)
 	}
 	if (ret < 0)
 		return (-1);
-	if (ndtmp == NULL && **tmp == '\0')
+	if (ndtmp == NULL && (*file)->tmp[0] == '\0')
 		return (0);
-	return (save_lines(ndtmp, tmp, line));
+	return (save_lines(ndtmp, file, line));
 }
 
 int				get_next_line(const int fd, char **line)
 {
-	static char	*tmp;
+	static t_file	*file;
 
 	if (!fd || !line)
-		return (-1);
+		return (-1);	
+	file = get_file(&file, fd);
 	*line = NULL;
-	return (ft_read(fd, &tmp, line));
+	return (ft_read(&file, line));
 }
