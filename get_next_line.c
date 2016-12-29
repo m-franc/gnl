@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/28 21:10:47 by mfranc           ###   ########.fr       */
+/*   Updated: 2016/12/29 17:46:55 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,31 +26,50 @@ t_file	*lstnew(int fd)
 }
 
 t_file	*get_file(t_file **begin, int fd)
+	/*{
+	  t_file	*tmplst;
+	  t_file	*tmpnext;
+
+	  if (!*begin)
+	  return (*begin = lstnew(fd));
+	  tmplst = (*begin);
+	  tmpnext = (*begin)->next;
+	  if (tmplst->fd == fd)
+	  return (tmplst);
+	  while (tmplst)
+	  {
+	  if (tmpnext->fd == fd)
+	  {
+	  tmplst->next = tmpnext->next;
+	  tmpnext->next = (*begin)->next;
+	 *begin = tmpnext;
+	 return (tmpnext);
+	 }
+	 tmplst = tmplst->next;
+	 tmpnext = tmpnext->next;
+	 }
+	 tmpnext->next = lstnew(fd);
+	 return (tmpnext->next);
+	 }*/
 {
 	t_file	*tmplst;
-	t_file	*tmpnext;
 
 	if (!*begin)
 		return (*begin = lstnew(fd));
-	tmplst = (*begin);
-	tmpnext = (*begin)->next;
-	if (tmplst->fd == fd)
-		return (tmplst);
-	while (tmpnext)
-	{
-		if (tmpnext->fd == fd)
-		{
-			tmplst->next = tmpnext->next;
-			tmpnext->next = (*begin)->next;
-			*begin = tmpnext;
-			return (tmpnext);
-		}
+	tmplst = *begin;
+	while (tmplst && fd != tmplst->fd)
 		tmplst = tmplst->next;
-		tmpnext = tmpnext->next;
+	if (tmplst == NULL)
+	{
+		tmplst = *begin;
+		while (tmplst->next)
+			tmplst = tmplst->next;
+		tmplst->next = lstnew(fd);
+		return (tmplst->next);
 	}
-	tmpnext = lstnew(fd);
-	return (tmpnext);
+	return (tmplst);
 }
+
 
 int				save_lines(char *ndtmp, t_file **file, char **line)
 {
@@ -67,6 +86,7 @@ int				save_lines(char *ndtmp, t_file **file, char **line)
 		return (1);
 	}
 }
+
 
 int				ft_read(t_file **file, char **line)
 {
@@ -94,6 +114,17 @@ int				ft_read(t_file **file, char **line)
 	return (save_lines(ndtmp, file, line));
 }
 
+int			countlist(t_file *lst)
+{
+	int	i = 0;
+	while (lst)
+	{
+		lst = lst->next;
+		i++;
+	}
+	return (i);
+}
+
 int				get_next_line(const int fd, char **line)
 {
 	static t_file	*file;
@@ -101,6 +132,7 @@ int				get_next_line(const int fd, char **line)
 	if (!fd || !line)
 		return (-1);	
 	file = get_file(&file, fd);
+  //  printf("NOMBRE DELEMENT DANS LA LISTE : %d\n", countlist(file));
 	*line = NULL;
 	return (ft_read(&file, line));
 }
