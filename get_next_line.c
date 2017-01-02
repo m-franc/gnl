@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/29 17:46:55 by mfranc           ###   ########.fr       */
+/*   Updated: 2017/01/02 20:03:27 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,12 @@ t_file	*get_file(t_file **begin, int fd)
 	return (tmplst);
 }
 
-
 int				save_lines(char *ndtmp, t_file **file, char **line)
 {
+	if (*line[0] == '\0')
+		return (0);
 	if (ndtmp == NULL)
-	{	
-		*line = ft_strdup(*line);
-		(*file)->tmp[0] = '\0';
 		return (1);
-	}
 	else
 	{
 		*line = ft_strsub(*line, 0, ft_strlen(*line) - ft_strlen(ndtmp));
@@ -86,7 +83,6 @@ int				save_lines(char *ndtmp, t_file **file, char **line)
 		return (1);
 	}
 }
-
 
 int				ft_read(t_file **file, char **line)
 {
@@ -97,40 +93,28 @@ int				ft_read(t_file **file, char **line)
 	if (!((*file)->tmp))
 		(*file)->tmp = ft_strnew(0);
 	*line = (*file)->tmp;
-	ndtmp = ft_strchr(*line, '\n');
-
+	ndtmp = ft_strchr((*file)->tmp, '\n');	
 	while (!ndtmp || (*file)->tmp)
 	{
 		if ((ret = read((*file)->fd, buf, BUFF_SIZE)) == 0)
 			break ;
+		if (ret < 0)
+			return (-1);
 		buf[ret] = '\0';
-		*line = ft_strjoin(*line, buf);
-		ndtmp = ft_strchr(*line, '\n');
+		*line = ft_strjoin((*file)->tmp, buf);
+		ft_strdel(line);
+		*line = (*file)->tmp;
+		ndtmp = ft_strchr((*file)->tmp, '\n');
 	}
-	if (ret < 0)
-		return (-1);
-	if (ndtmp == NULL && (*file)->tmp[0] == '\0')
-		return (0);
 	return (save_lines(ndtmp, file, line));
-}
-
-int			countlist(t_file *lst)
-{
-	int	i = 0;
-	while (lst)
-	{
-		lst = lst->next;
-		i++;
-	}
-	return (i);
 }
 
 int				get_next_line(const int fd, char **line)
 {
 	static t_file	*file;
 
-	if (!fd || !line)
-		return (-1);	
+	if (!line)
+		return (-1);
 	file = get_file(&file, fd);
   //  printf("NOMBRE DELEMENT DANS LA LISTE : %d\n", countlist(file));
 	*line = NULL;
