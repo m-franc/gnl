@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2017/01/02 20:03:27 by mfranc           ###   ########.fr       */
+/*   Updated: 2017/01/03 19:25:13 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,17 @@ t_file	*get_file(t_file **begin, int fd)
 
 int				save_lines(char *ndtmp, t_file **file, char **line)
 {
-	if (*line[0] == '\0')
+	if ((*file)->tmp[0] == '\0')
 		return (0);
 	if (ndtmp == NULL)
-		return (1);
-	else
 	{
-		*line = ft_strsub(*line, 0, ft_strlen(*line) - ft_strlen(ndtmp));
+		*line = ft_strdup((*file)->tmp);
+		(*file)->tmp = NULL;
+		return (1);
+	}
+	else
+	{	
+		*line = ft_strsub((*file)->tmp, 0, ft_strlen((*file)->tmp) - ft_strlen(ndtmp));
 		(*file)->tmp = ndtmp + 1;
 		return (1);
 	}
@@ -88,22 +92,22 @@ int				ft_read(t_file **file, char **line)
 {
 	char		buf[BUFF_SIZE + 1];
 	int			ret;
+	char		*tmpline;
 	char		*ndtmp;
 
 	if (!((*file)->tmp))
 		(*file)->tmp = ft_strnew(0);
-	*line = (*file)->tmp;
-	ndtmp = ft_strchr((*file)->tmp, '\n');	
-	while (!ndtmp || (*file)->tmp)
+	ndtmp = ft_strchr((*file)->tmp, '\n');
+	while (!ndtmp || *((*file)->tmp))
 	{
 		if ((ret = read((*file)->fd, buf, BUFF_SIZE)) == 0)
 			break ;
 		if (ret < 0)
 			return (-1);
 		buf[ret] = '\0';
-		*line = ft_strjoin((*file)->tmp, buf);
-		ft_strdel(line);
-		*line = (*file)->tmp;
+		tmpline = ft_strjoin((*file)->tmp, buf);
+		ft_strdel(&(*file)->tmp);
+		(*file)->tmp = tmpline;
 		ndtmp = ft_strchr((*file)->tmp, '\n');
 	}
 	return (save_lines(ndtmp, file, line));
@@ -116,7 +120,6 @@ int				get_next_line(const int fd, char **line)
 	if (!line)
 		return (-1);
 	file = get_file(&file, fd);
-  //  printf("NOMBRE DELEMENT DANS LA LISTE : %d\n", countlist(file));
 	*line = NULL;
 	return (ft_read(&file, line));
 }
