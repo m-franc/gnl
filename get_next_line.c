@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2017/01/04 19:54:48 by mfranc           ###   ########.fr       */
+/*   Updated: 2017/01/05 15:14:12 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,20 @@ t_file				*get_file(t_file **begin, int fd)
 
 void				remove_file(t_file **file)
 {
-	(*file)->fd = -1;
-	(*file)->tmp = NULL;
-	(*file)->next = NULL;
+	t_file	*supp;
+
+	supp = *file;
 	if ((*file)->next)
+	{
+		supp->fd = -1;
 		*file = (*file)->next;
+		free(supp);
+	}
 	else
 	{
-		free(file);
-		*file = NULL;
+		supp->fd = -1;
+		free(supp);
+		supp = NULL;
 	}
 }
 
@@ -106,6 +111,7 @@ int					get_next_line(const int fd, char **line)
 		return (-1);
 	file = get_file(&file, fd);
 	*line = NULL;
+//	printf("\033[31mTMP VOIR SI LE MFD MARCHE : %s\n", (file)->tmp);
 	ndtmp = ft_strchr(file->tmp, '\n');
 	while (!ndtmp || *((file)->tmp))
 	{
