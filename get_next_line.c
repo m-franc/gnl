@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2017/01/05 15:14:12 by mfranc           ###   ########.fr       */
+/*   Updated: 2017/01/06 19:00:42 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,19 @@ t_file				*lstnew(t_file **begin, int fd)
 		(*begin)->fd = fd;
 		(*begin)->tmp = ft_strnew(0);
 		(*begin)->next = NULL;
+		return (*begin);
 	}
-	if (!(new = (t_file*)malloc(sizeof(t_file))))
-		return (NULL);
-	new->fd = fd;
-	new->tmp = ft_strnew(0);
-	new->next = (*begin);
-	return (new);
+	else
+	{
+
+		if (!(new = (t_file*)malloc(sizeof(t_file))))
+			return (NULL);
+		new->fd = fd;
+		new->tmp = ft_strnew(0);
+		new->next = *begin;
+		*begin = new;
+		return (new);
+	}
 }
 
 t_file				*get_file(t_file **begin, int fd)
@@ -49,9 +55,9 @@ t_file				*get_file(t_file **begin, int fd)
 		if (tmpnext->fd == fd)
 		{
 			tmplst->next = tmpnext->next;
-			tmpnext->next = (*begin)->next;
+			tmpnext->next = *begin;
 			*begin = tmpnext;
-			return (tmpnext);
+			return (*begin);
 		}
 		tmplst = tmplst->next;
 		tmpnext = tmpnext->next;
@@ -67,12 +73,14 @@ void				remove_file(t_file **file)
 	if ((*file)->next)
 	{
 		supp->fd = -1;
+		ft_strdel(&((*file)->tmp));
 		free(supp);
 		*file = (*file)->next;
 	}
 	else
 	{
 		supp->fd = -1;
+		ft_strdel(&(supp->tmp));
 		supp = NULL;
 		free(supp);
 	}
@@ -81,7 +89,7 @@ void				remove_file(t_file **file)
 int					save_lines(char *ndtmp, t_file **file, char **line)
 {
 	char	*nexttmp;
-	
+
 	if ((*file)->tmp[0] == '\0')
 	{
 //		remove_file(file);	
