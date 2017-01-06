@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2017/01/06 19:00:42 by mfranc           ###   ########.fr       */
+/*   Updated: 2017/01/06 20:05:42 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ t_file				*lstnew(t_file **begin, int fd)
 	}
 	else
 	{
-
 		if (!(new = (t_file*)malloc(sizeof(t_file))))
 			return (NULL);
 		new->fd = fd;
@@ -88,11 +87,9 @@ void				remove_file(t_file **file)
 
 int					save_lines(char *ndtmp, t_file **file, char **line)
 {
-	char	*nexttmp;
-
 	if ((*file)->tmp[0] == '\0')
 	{
-//		remove_file(file);	
+		remove_file(file);	
 		return (0);
 	}
 	if (ndtmp == NULL)
@@ -104,9 +101,7 @@ int					save_lines(char *ndtmp, t_file **file, char **line)
 	else
 	{	
 		*line = ft_strsub((*file)->tmp, 0, ft_strlen((*file)->tmp) - ft_strlen(ndtmp));
-		ft_strdel(&(*file)->tmp);
-		nexttmp = ft_strdup(ndtmp + 1);
-		(*file)->tmp = nexttmp;
+		(*file)->tmp = ft_strdup(ndtmp + 1);
 		return (1);
 	}
 }
@@ -114,7 +109,7 @@ int					save_lines(char *ndtmp, t_file **file, char **line)
 int					get_next_line(const int fd, char **line)
 {
 	char			buf[BUFF_SIZE + 1];
-	int			ret;
+	int				ret;
 	char			*tmpline;
 	char			*ndtmp;
 	static t_file	*file;
