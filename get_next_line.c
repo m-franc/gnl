@@ -67,22 +67,24 @@ void				remove_file(t_file **file)
 	if ((*file)->next)
 	{
 		supp->fd = -1;
-		*file = (*file)->next;
 		free(supp);
+		*file = (*file)->next;
 	}
 	else
 	{
 		supp->fd = -1;
-		free(supp);
 		supp = NULL;
+		free(supp);
 	}
 }
 
 int					save_lines(char *ndtmp, t_file **file, char **line)
 {
+	char	*nexttmp;
+	
 	if ((*file)->tmp[0] == '\0')
 	{
-		remove_file(file);	
+//		remove_file(file);	
 		return (0);
 	}
 	if (ndtmp == NULL)
@@ -94,7 +96,9 @@ int					save_lines(char *ndtmp, t_file **file, char **line)
 	else
 	{	
 		*line = ft_strsub((*file)->tmp, 0, ft_strlen((*file)->tmp) - ft_strlen(ndtmp));
-		(*file)->tmp = ndtmp + 1;
+		ft_strdel(&(*file)->tmp);
+		nexttmp = ft_strdup(ndtmp + 1);
+		(*file)->tmp = nexttmp;
 		return (1);
 	}
 }
@@ -102,7 +106,7 @@ int					save_lines(char *ndtmp, t_file **file, char **line)
 int					get_next_line(const int fd, char **line)
 {
 	char			buf[BUFF_SIZE + 1];
-	int				ret;
+	int			ret;
 	char			*tmpline;
 	char			*ndtmp;
 	static t_file	*file;
@@ -111,7 +115,6 @@ int					get_next_line(const int fd, char **line)
 		return (-1);
 	file = get_file(&file, fd);
 	*line = NULL;
-//	printf("\033[31mTMP VOIR SI LE MFD MARCHE : %s\n", (file)->tmp);
 	ndtmp = ft_strchr(file->tmp, '\n');
 	while (!ndtmp || *((file)->tmp))
 	{
