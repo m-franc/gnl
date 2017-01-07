@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2017/01/06 20:05:42 by mfranc           ###   ########.fr       */
+/*   Updated: 2017/01/07 17:11:00 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void				remove_file(t_file **file)
 
 int					save_lines(char *ndtmp, t_file **file, char **line)
 {
+	char			*nexttmp;
+
 	if ((*file)->tmp[0] == '\0')
 	{
 		remove_file(file);	
@@ -101,7 +103,9 @@ int					save_lines(char *ndtmp, t_file **file, char **line)
 	else
 	{	
 		*line = ft_strsub((*file)->tmp, 0, ft_strlen((*file)->tmp) - ft_strlen(ndtmp));
+		nexttmp = (*file)->tmp;
 		(*file)->tmp = ft_strdup(ndtmp + 1);
+		ft_strdel(&nexttmp);
 		return (1);
 	}
 }
@@ -113,7 +117,6 @@ int					get_next_line(const int fd, char **line)
 	char			*tmpline;
 	char			*ndtmp;
 	static t_file	*file;
-
 	if (!line)
 		return (-1);
 	file = get_file(&file, fd);
