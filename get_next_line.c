@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2017/01/07 17:11:00 by mfranc           ###   ########.fr       */
+/*   Updated: 2017/01/07 19:43:53 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_file				*get_file(t_file **begin, int fd)
 	tmplst = *begin;
 	tmpnext = (*begin)->next;
 	while (tmpnext)
-	{	
+	{
 		if (tmpnext->fd == fd)
 		{
 			tmplst->next = tmpnext->next;
@@ -91,7 +91,11 @@ int					save_lines(char *ndtmp, t_file **file, char **line)
 
 	if ((*file)->tmp[0] == '\0')
 	{
-		remove_file(file);	
+	//	ft_putnbr((*file)->fd);
+	//	ft_putendl((*file)->tmp);
+	remove_file(file);
+	//	ft_putnbr((*file)->fd);
+	//	ft_putendl((*file)->tmp);
 		return (0);
 	}
 	if (ndtmp == NULL)
@@ -101,8 +105,9 @@ int					save_lines(char *ndtmp, t_file **file, char **line)
 		return (1);
 	}
 	else
-	{	
-		*line = ft_strsub((*file)->tmp, 0, ft_strlen((*file)->tmp) - ft_strlen(ndtmp));
+	{
+		*line = ft_strsub((*file)->tmp, 0, ft_strlen((*file)->tmp)
+				- ft_strlen(ndtmp));
 		nexttmp = (*file)->tmp;
 		(*file)->tmp = ft_strdup(ndtmp + 1);
 		ft_strdel(&nexttmp);
@@ -117,6 +122,7 @@ int					get_next_line(const int fd, char **line)
 	char			*tmpline;
 	char			*ndtmp;
 	static t_file	*file;
+
 	if (!line)
 		return (-1);
 	file = get_file(&file, fd);

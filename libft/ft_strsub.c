@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/08 20:21:39 by mfranc            #+#    #+#             */
-/*   Updated: 2016/12/15 15:24:53 by mfranc           ###   ########.fr       */
+/*   Updated: 2017/01/07 18:59:26 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 char	*ft_strsub(char const *s, unsigned int start, size_t n)
 {
 	char				*new;
-	static unsigned int	i;
+	unsigned int		i;
 
 	if (!s)
 		return (NULL);
