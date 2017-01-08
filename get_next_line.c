@@ -6,7 +6,7 @@
 /*   By: mfranc <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/27 14:32:21 by mfranc            #+#    #+#             */
-/*   Updated: 2017/01/07 19:56:47 by mfranc           ###   ########.fr       */
+/*   Updated: 2017/01/08 20:18:35 by mfranc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,10 @@ void				remove_file(t_file **file)
 	t_file	*supp;
 
 	supp = *file;
-//	if ((*file)->next)
-//	{
-		supp->fd = -1;
-		ft_strdel(&((*file)->tmp));
-		free(supp);
-		*file = (*file)->next;
-//	}
-/*	else
-	{
-		supp->fd = -1;
-		ft_strdel(&(supp->tmp));
-		supp = NULL;
-		free(supp);
-	}*/
+	supp->fd = -1;
+	ft_strdel(&((*file)->tmp));
+	free(supp);
+	*file = (*file)->next;
 }
 
 int					save_lines(char *ndtmp, t_file **file, char **line)
@@ -91,17 +81,13 @@ int					save_lines(char *ndtmp, t_file **file, char **line)
 
 	if ((*file)->tmp[0] == '\0')
 	{
-	//	ft_putnbr((*file)->fd);
-	//	ft_putendl((*file)->tmp);
-	remove_file(file);
-	//	ft_putnbr((*file)->fd);
-	//	ft_putendl((*file)->tmp);
+		remove_file(file);
 		return (0);
 	}
 	if (ndtmp == NULL)
 	{
 		*line = ft_strdup((*file)->tmp);
-		(*file)->tmp[0] = '\0';
+		ft_bzero((*file)->tmp, ft_strlen((*file)->tmp));
 		return (1);
 	}
 	else
